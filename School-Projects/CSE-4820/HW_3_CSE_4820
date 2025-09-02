@@ -1,0 +1,43 @@
+import seaborn as sns
+import pandas as pd
+from sklearn.model_selection import train_test_split
+import cvxpy as cp
+import numpy as np
+
+# Load the Iris dataset
+iris = sns.load_dataset('iris')
+
+species_map = {'setosa': 1, 'versicolor': 2, 'virginica': 3}
+iris['species'] = iris['species'].map(species_map)
+
+# Features X, target y
+X = iris.drop('species', axis=1).values  
+y = iris['species'].values 
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, stratify=y, random_state=42)
+
+# weights w, bias b
+n_features = X_train.shape[1]  # Number of features in the dataset
+w = cp.Variable(n_features)
+b = cp.Variable()
+
+# squared loss function
+squared_loss = cp.sum_squares(X_train @ w + b - y_train) / len(y_train)
+problem = cp.Problem(cp.Minimize(squared_loss))
+problem.solve()
+
+print("Optimal weights (w):", w.value)
+print("Optimal bias (b):", b.value)
+
+y_pred = X_test @ w.value + b.value
+
+y_pred_class = np.round(y_pred)
+
+# test accuracy
+accuracy = np.mean(y_pred_class == y_test)
+print("Test accuracy:", accuracy)
+
+# predictions vs actual labels
+print("\nPredictions vs Actual labels:")
+for pred, actual in zip(y_pred_class[:5], y_test[:5]):
+    print(f"Predicted: {int(pred)}, Actual: {actual}")
