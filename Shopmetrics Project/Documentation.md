@@ -1,0 +1,4 @@
+This Folder conatins some of the files I used for my data science project at Shopmetrics.
+While the functionality cannot be shown due to the data being confidential, the project's methodology
+can be seen. I took raw data collected by thousands of mystery shoppers, and created a dataframe that stores said data as 0s and 1s. This dataframe was used for two PCA analysis, one of Likert questions, and one of specific social media based questions. The results of the PCA were analysed by an o3 model to give us buisness analysis. 
+All the code was written by me, with help of shopmetric references and AI. 
